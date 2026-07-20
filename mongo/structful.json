@@ -1,0 +1,44 @@
+{
+  "_group": "system_collections",
+  "_name": "_structful",
+  "_version": "202507",
+  "singular": "structful",
+  "plural": "structful",
+  "system": true,
+  "idPrefix": "",
+  "indexSpecs": [{
+    "name": "group_version_1",
+    "keys": { "_group": 1, "_version": 1 },
+    "unique": false
+  }, {
+    "name": "group_version_1",
+    "keys": { "_group": 1, "_version": 1, "_name": 1 },
+    "unique": true
+  }],
+  "schema": {
+    "type": "object",
+    "properties": {
+      "_id": {
+        "bsonType": "objectId"
+      },
+      "_group": {
+        "bsonType": "string"
+      },
+      "_name": {
+        "bsonType": "string"
+      },
+      "_version": {
+        "bsonType": "string"
+      },
+      "createdAt": {
+        "bsonType": "timestamp"
+      },
+      "updatedAt": {
+        "bsonType": "timestamp"
+      },
+      "archivedAt": {
+        "bsonType": "timestamp"
+      }
+    }
+  }
+}

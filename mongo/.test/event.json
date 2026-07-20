@@ -1,0 +1,28 @@
+{
+  "_group": "system_collections",
+  "_name": "event",
+  "_version": "202507",
+  "singular": "event",
+  "plural": "events",
+  "idPrefix": "e",
+  "indexSpecs": [],  
+  "timeseries": {
+    "timeField": "createdAt",
+    "metaField": "name",
+    "granularity": "minutes"
+  },
+  "schema": {
+    "type": "object",
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "name": {
+        "bsonType": "string"
+      },
+      "createdAt": {
+        "bsonType": "timestamp"
+      }
+    }
+  }
+}

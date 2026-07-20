@@ -1,0 +1,56 @@
+{
+  "_group": "system_collections",
+  "_name": "activity",
+  "_version": "202507",
+  "singular": "activity",
+  "plural": "activities",
+  "idPrefix": "act",
+  "system": true,
+  "indexSpecs": [{
+    "name": "name_1",
+    "keys": { "name": 1 },
+    "unique": true
+  }],
+  "schema": {
+    "type": "object",
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "person": {
+        "bsonType": "string"
+      },
+      "name": {
+        "bsonType": "string"
+      },
+      "createdAt": {
+        "bsonType": "date"
+      },
+      "updatedAt": {
+        "bsonType": "date"
+      },
+      "archivedAt": {
+        "bsonType": "date"
+      }
+    }
+  },
+  "views": {
+    "activityExpanded": {
+      "viewOn": "activity",
+      "pipeline": [{
+        "$lookup": {
+          "from": "person",
+          "localField": "person",
+          "foreignField": "_id",
+          "as": "refPerson"
+        }
+      }, {
+        "$unwind": "$refPerson"
+      }, {
+        "$set": { "person": "$refPerson" }
+      }, {
+        "$unset": "refPerson"
+      }]
+    }
+  }
+}

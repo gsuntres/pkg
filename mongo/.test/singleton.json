@@ -1,0 +1,41 @@
+{
+  "_group": "system_collections",
+  "_name": "singleton",
+  "_version": "202507",
+  "singular": "singleton",
+  "plural": "singletons",
+  "idPrefix": "sgl",
+  "indexSpecs": [{
+    "name": "tpname_1",
+    "keys": { 
+      "type": 1,
+      "name": 1 
+    },
+    "unique": true
+  }],
+  "disableValidation": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "type": {
+        "bsonType": "string"
+      },
+      "name": {
+        "bsonType": "string"
+      },
+      "age": {
+        "bsonType": "string"
+      },
+      "createdAt": {
+        "bsonType": "date"
+      },
+      "updatedAt": {
+        "bsonType": "date"
+      }
+    },
+    "additionalProperties": true
+  }
+}

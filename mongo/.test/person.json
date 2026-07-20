@@ -1,0 +1,37 @@
+{
+  "_group": "system_collections",
+  "_name": "person",
+  "_version": "202507",
+  "singular": "person",
+  "plural": "persons",
+  "idPrefix": "prs",
+  "system": true,
+  "indexSpecs": [{
+    "name": "name_1",
+    "keys": { "name": 1 },
+    "unique": true
+  }],
+  "schema": {
+    "type": "object",
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "name": {
+        "bsonType": "string"
+      },
+      "age": {
+        "bsonType": "number"
+      },
+      "createdAt": {
+        "bsonType": "date"
+      },
+      "updatedAt": {
+        "bsonType": "date"
+      },
+      "archivedAt": {
+        "bsonType": "date"
+      }
+    }
+  }
+}

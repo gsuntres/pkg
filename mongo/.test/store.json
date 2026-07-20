@@ -1,0 +1,36 @@
+{
+  "_group": "system_collections",
+  "_name": "store",
+  "_version": "202507",
+  "singular": "store",
+  "plural": "stores",
+  "idPrefix": "str",
+  "indexSpecs": [{
+    "name": "code_1",
+    "keys": { "code": 1 },
+    "unique": true
+  }],
+  "schema": {
+    "type": "object",
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "code": {
+        "bsonType": "string"
+      },
+      "name": {
+        "bsonType": "string"
+      },
+      "created_at": {
+        "bsonType": "date"
+      },
+      "updated_at": {
+        "bsonType": "date"
+      },
+      "archived_at": {
+        "bsonType": "date"
+      }
+    }
+  }
+}

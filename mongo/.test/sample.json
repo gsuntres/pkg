@@ -1,0 +1,20 @@
+[{
+  "name": "PKCELL Ultra Alkaline Batteries Size D LR20-2B (2-Pack)",
+  "sku": "ALK-PK-LR202B-01",
+  "price": {
+    "value": 288,
+    "currency": "cad"
+  },
+  "active": true,
+  "tags": ["alkaline", "size-d", "pkcell"]
+}, {
+  "name": "Shimano Cleats SH-11 Yellow 6 degrees",
+  "sku": "BK-SM-SH51",
+  "active": true,
+  "tags": ["shimano", "cleats", "sh11", "cycling"]
+}, {
+  "name": "OSRAM Light Bulbs H7 Original Classic 12V 55W Spare Part Replacement",
+  "sku": "LT-OSR-H712V35W",
+  "active": false,
+  "tags": ["osram", "h7", "halogen-bulb", "12v", "55w"]
+}]

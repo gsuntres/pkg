@@ -1,0 +1,53 @@
+{
+  "_group": "system_collections",
+  "_name": "user",
+  "_version": "202507",
+  "singular": "user",
+  "plural": "users",
+  "idPrefix": "usr",
+  "system": true,
+  "indexSpecs": [{
+    "name": "username_1",
+    "keys": { "username": 1 },
+    "unique": true
+  }, {
+    "name": "email_1",
+    "keys": { "email": 1 },
+    "unique": true
+  }],
+  "schema": {
+    "type": "object",
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "fullname": {
+        "bsonType": "string"
+      },
+      "firstname": {
+        "bsonType": "string"
+      },
+      "username": {
+        "bsonType": "string"
+      },
+      "password": {
+        "bsonType": "string"
+      },
+      "email": {
+        "bsonType": "string"
+      },
+      "credentials": {
+        "bsonType": ["object", "null"]
+      },
+      "createdAt": {
+        "bsonType": "date"
+      },
+      "updatedAt": {
+        "bsonType": "date"
+      },
+      "archivedAt": {
+        "bsonType": "date"
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "_group": "system_collections",
+  "_name": "offer",
+  "_version": "202507",
+  "singular": "offer",
+  "plural": "offers",
+  "idPrefix": "ofr",
+  "indexSpecs": [{
+    "name": "name_1",
+    "keys": { "name": 1 },
+    "unique": true
+  }],
+  "discriminator": {
+    "field": "store",
+    "ctxField": "store",
+    "collection": "store"
+  },
+  "schema": {
+    "type": "object",
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "name": {
+        "bsonType": "string"
+      },
+      "store": {
+        "bsonType": "string"
+      },
+      "createdAt": {
+        "bsonType": "date"
+      }
+    }
+  }
+}

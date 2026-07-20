@@ -1,0 +1,28 @@
+{
+  "_group": "system_collections",
+  "_name": "item",
+  "_version": "202507",
+  "singular": "item",
+  "plural": "items",
+  "system": false,
+  "idPrefix": "i",
+  "indexSpecs": [],
+  "schema": {
+    "type": "object",
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "name": {
+        "bsonType": "string"
+      },
+      "createdAt": {
+        "bsonType": "date"
+      },
+      "updatedAt": {
+        "bsonType": "date"
+      }
+    },
+    "additionalProperties": true
+  }
+}
