@@ -365,6 +365,8 @@ func Start(props *MongoStartProps) error {
 	}
 
 	uri := props.MongoUri
+	log.Printf("URI: %s", uri)
+
 	user := props.MongoUser
 	pass := props.MongoPass
 
@@ -437,7 +439,7 @@ func Start(props *MongoStartProps) error {
 	}
 	
 	if err := cOptions.Validate(); err != nil {
-		log.Fatalf("Failed to validate mongo options: %+v %+v",  cOptions, err.Error())
+		log.Fatalf("Failed to validate mongo options: %+v", err.Error())
 
 		return err
 	}
