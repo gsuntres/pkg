@@ -14,6 +14,34 @@ type FindOptions struct {
 	Sort   [][]any `json:"sort"`
 }
 
+func FindOptionsFromMap(m map[string]any) *FindOptions {
+	opts := &FindOptions{}
+
+	limit, hasLimit := commons.GetGeneric[int64](m, "limit") 
+	if hasLimit {
+		if limit == 0 {
+			opts.Limit = 10
+		} else {
+			opts.Limit = limit
+		}
+	}
+
+	offset, hasOffset := commons.GetGeneric[int64](m, "offset") 
+	if hasOffset {
+		opts.Offset = offset
+	}
+
+	alias := commons.GetString(m, "alias")
+	opts.Alias = alias
+	
+	sort, hasSort := commons.GetGeneric[[][]any](m, "sort")
+	if hasSort {
+		opts.Sort = sort
+	}
+
+	return opts
+}
+
 // Find is used to fetch the first page of data.
 func (c *MongoClient) Find(ctx context.Context, database, name string, filter bson.M, opts *FindOptions) (bson.M, error) {
 

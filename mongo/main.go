@@ -437,7 +437,7 @@ func Start(props *MongoStartProps) error {
 	}
 	
 	if err := cOptions.Validate(); err != nil {
-		log.Fatalf("Failed to validate mongo options: %+v", err.Error())
+		log.Fatalf("Failed to validate mongo options: %+v %+v",  cOptions, err.Error())
 
 		return err
 	}
