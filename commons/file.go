@@ -32,13 +32,18 @@ type WorkspaceInfo struct {
 // FileWorkspaceInfo given a file will return relevant information about 
 // its location, such as its parent directory.
 func FileWorkspaceInfo(file string) *WorkspaceInfo {
+
+	log.Printf("Find workspace info for %s", file)
+
 	// 1. break down file
 	clean := filepath.Clean(file)
 	parts := strings.Split(clean, string(filepath.Separator))
 
+	log.Printf("Parts: %+v", parts)
+
 	l := len(parts)
 
-	if l > 3 {
+	if l > 2 {
 		parentDir := parts[l - 2]
 		return &WorkspaceInfo {
 			ParentDir: parentDir,

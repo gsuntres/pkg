@@ -365,8 +365,6 @@ func Start(props *MongoStartProps) error {
 	}
 
 	uri := props.MongoUri
-	log.Printf("URI: %s", uri)
-
 	user := props.MongoUser
 	pass := props.MongoPass
 
