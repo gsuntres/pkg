@@ -37,9 +37,8 @@ func (c *MongoClient) InsertOne(ctx context.Context, database, name string, orig
 	}
 		
 	ignoreAudit := slices.Contains(c.IgnoreAudit, name)
-	log.Printf("WITH AUDIT? %v", c.WithAudit)
+	
 	if c.WithAudit && !ignoreAudit {
-		log.Println("trigger audit")
 		contx := commons.ContextSerialize(ctx, c.ContextFields)
 		audit := &AuditResult {
 			Entity: name,
