@@ -429,12 +429,12 @@ func Start(props *MongoStartProps) error {
 
 	client.EventBus = events.NewTypedEventBus()
 
-	if client.WithAudit {
+	// if client.WithAudit {
 		var onAudit OnAudit = func(audit *AuditResult) error {
 			return events.Publish(client.EventBus, audit)
 	 	}
 	 	client.OnAudit = &onAudit
-	}
+	// }
 	
 	if err := cOptions.Validate(); err != nil {
 		log.Fatalf("Failed to validate mongo options: %+v", err.Error())

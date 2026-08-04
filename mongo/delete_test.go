@@ -28,16 +28,16 @@ func TestDeleteOne(t *testing.T) {
 	err = client.DeleteOne(context.Background(), "mydb", "mycollection", bson.M{"_id": o["_id"].(string)})
 	if err != nil { t.Fatalf("Failed to deleteOne %#v", err) }
 
-  // raw query
-  var results bson.M
-  filter := bson.M{ "name": "MyName" }
+	// raw query
+	var results bson.M
+	filter := bson.M{ "name": "MyName" }
 
-  c := client.Client.Database("mydb").Collection("mycollection")
-  c.FindOne(context.Background(), filter).Decode(&results)
+	c := client.Client.Database("mydb").Collection("mycollection")
+	c.FindOne(context.Background(), filter).Decode(&results)
 
-  if results != nil {
-  	t.Fatalf("Should have no results not %v", results)	
-  }
+	if results != nil {
+		t.Fatalf("Should have no results not %v", results)	
+	}
 }
 
 func TestDelete_Discriminator(t *testing.T) {
@@ -65,20 +65,20 @@ func TestDelete_Discriminator(t *testing.T) {
 	// Store str_1234 has BOOMRAW 1.
 	ctx1 := context.Background()
 	ctx1 = context.WithValue(ctx1, "store", "str_1234")
-  offer1 := map[string]any { "name": "BOOMRAW 1" }
-  _, err = client.InsertOne(ctx1, "mydb", "offer", offer1)
-  if err != nil { t.Fatalf("Failed to insertOne %#v", err) }
+	offer1 := map[string]any { "name": "BOOMRAW 1" }
+	_, err = client.InsertOne(ctx1, "mydb", "offer", offer1)
+	if err != nil { t.Fatalf("Failed to insertOne %#v", err) }
 
-  // Store str_4321 has BOOMRAW 2
-  ctx2 := context.Background()
-	ctx2 = context.WithValue(ctx2, "store", "str_4321")
-	offer2 := map[string]any { "name": "BOOMRAW 2" }
-  _, err = client.InsertOne(ctx2, "mydb", "offer", offer2)
-  if err != nil { t.Fatalf("Failed to insertOne %#v", err) }
+	// Store str_4321 has BOOMRAW 2
+	ctx2 := context.Background()
+		ctx2 = context.WithValue(ctx2, "store", "str_4321")
+		offer2 := map[string]any { "name": "BOOMRAW 2" }
+	_, err = client.InsertOne(ctx2, "mydb", "offer", offer2)
+	if err != nil { t.Fatalf("Failed to insertOne %#v", err) }
 
-  // Attempt to delete BOOMRAW2 in str_1234
-  err = client.DeleteOne(ctx1, "mydb", "offer", bson.M{"name": "BOOMRAW2"})
-	
+	// Attempt to delete BOOMRAW2 in str_1234
+	err = client.DeleteOne(ctx1, "mydb", "offer", bson.M{"name": "BOOMRAW2"})
+		
 	// Within store str_4321 searching for BOOMRAW should return one result
 	filter := bson.M{"name": bson.M{"$regex": "BOOMRAW*"}}
 	findResult, err := client.Find(ctx2, "mydb", "offer", filter, &FindOptions{	Offset: int64(0) })
@@ -140,31 +140,31 @@ func TestDeleteOne_WithAudit(t *testing.T) {
 	
 	cancel()
   
-  // raw query
-  var results bson.M
-  filter := bson.M{ "name": "MyName" }
+	// raw query
+	var results bson.M
+	filter := bson.M{ "name": "MyName" }
 
-  c := client.Client.Database("mydb").Collection("mycollection")
-  c.FindOne(context.Background(), filter).Decode(&results)
+	c := client.Client.Database("mydb").Collection("mycollection")
+	c.FindOne(context.Background(), filter).Decode(&results)
 
-  if results != nil {
-  	t.Fatalf("Should have no results not %v", results)	
-  }
-  
-  if onAudit_calls != 1 {
-  	t.Fatalf("ondelete should have been called once, not %d", onAudit_calls)
-  }
+	if results != nil {
+		t.Fatalf("Should have no results not %v", results)	
+	}
+	
+	if onAudit_calls != 1 {
+		t.Fatalf("ondelete should have been called once, not %d", onAudit_calls)
+	}
 
-  if onAudit_before != nil {
-  	tp := fmt.Sprintf("%T", onAudit_before)
-  	if tp != "bson.M" {
-  		t.Fatalf("before has the wrong type %s", tp)
+	if onAudit_before != nil {
+		tp := fmt.Sprintf("%T", onAudit_before)
+		if tp != "bson.M" {
+			t.Fatalf("before has the wrong type %s", tp)
+		}
+
+  		before := onAudit_before.(bson.M)
+
+  		AssertSubset(t, before, o, "Should have been equal")
   	}
-
-  	before := onAudit_before.(bson.M)
-
-  	AssertSubset(t, before, o, "Should have been equal")
-  }
 
   if onAudit_context != nil {
   	ctx := onAudit_context.(map[string]any)
@@ -208,29 +208,29 @@ func TestDeleteOne_WithAuditButIgnored(t *testing.T) {
 	cancel()
 	client.IgnoreAudit = []string{"event"}
 
-  // raw query
-  var results bson.M
-  filter := bson.M{ "name": "MyName" }
+	// raw query
+	var results bson.M
+	filter := bson.M{ "name": "MyName" }
 
-  c := client.Client.Database("mydb").Collection("mycollection")
-  c.FindOne(context.Background(), filter).Decode(&results)
+	c := client.Client.Database("mydb").Collection("mycollection")
+	c.FindOne(context.Background(), filter).Decode(&results)
 
-  if results != nil {
-  	t.Fatalf("Should have no results not %v", results)	
-  }
+	if results != nil {
+		t.Fatalf("Should have no results not %v", results)	
+	}
 
-  if onAudit_calls != 0 {
-  	t.Fatalf("ondelete should have not been called. [%d]", onAudit_calls)
-  }
+	if onAudit_calls != 0 {
+		t.Fatalf("ondelete should have not been called. [%d]", onAudit_calls)
+	}
 
-  if onAudit_before != nil {
-  	tp := fmt.Sprintf("%T", onAudit_before)
-  	if tp != "bson.M" {
-  		t.Fatalf("before has the wrong type %s", tp)
-  	}
+	if onAudit_before != nil {
+		tp := fmt.Sprintf("%T", onAudit_before)
+		if tp != "bson.M" {
+			t.Fatalf("before has the wrong type %s", tp)
+		}
 
-  	before := onAudit_before.(bson.M)
+		before := onAudit_before.(bson.M)
 
-  	AssertSubset(t, before, o, "Should have been equal")
-  }
+		AssertSubset(t, before, o, "Should have been equal")
+	}
 }

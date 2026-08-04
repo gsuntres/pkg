@@ -1,6 +1,7 @@
 package mongo
 
 import (
+	"log"
 	"context"
 	"slices"
 	
@@ -36,8 +37,9 @@ func (c *MongoClient) InsertOne(ctx context.Context, database, name string, orig
 	}
 		
 	ignoreAudit := slices.Contains(c.IgnoreAudit, name)
-
+	log.Printf("WITH AUDIT? %v", c.WithAudit)
 	if c.WithAudit && !ignoreAudit {
+		log.Println("trigger audit")
 		contx := commons.ContextSerialize(ctx, c.ContextFields)
 		audit := &AuditResult {
 			Entity: name,
@@ -47,7 +49,11 @@ func (c *MongoClient) InsertOne(ctx context.Context, database, name string, orig
 			Context: contx,
 		}
 
-		(*c.OnAudit)(audit)
+		if c.OnAudit == nil {
+			log.Println("Audit failed because OnAudit is not defined")
+		} else {
+			(*c.OnAudit)(audit)
+		}
 	}
 
 	return data, nil

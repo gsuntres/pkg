@@ -16,6 +16,7 @@ import (
 	"github.com/gsuntres/pkg/commons"
 	"github.com/gsuntres/pkg/mongo"
 	"github.com/gsuntres/pkg/structful"
+	"github.com/gsuntres/pkg/events"
 )
 
 type PersistProps struct {
@@ -142,6 +143,21 @@ func GetCurrent() any {
 
 func Orig() *Persist {
 	return persistOriginal
+}
+
+func (p *Persist) Subscribe(h events.Handler[mongo.AuditResult]) (cancel func()) {
+	client := mongo.GetMongoClient()
+	return client.Subscribe(h)
+}
+
+func (p *Persist) DisableAudit() {
+	client := mongo.GetMongoClient()
+	client.WithAudit = false
+}
+
+func (p *Persist) EnableAudit() {
+	client := mongo.GetMongoClient()
+	client.WithAudit = true
 }
 
 func (p *Persist) BootAccount(account string) error {

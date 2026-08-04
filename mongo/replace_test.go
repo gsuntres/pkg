@@ -31,7 +31,6 @@ func TestReplace(t *testing.T) {
 	
 	fetched["name"] = "Noah Patel"
 
-
 	// Replace in mycollection
 	replaced, err := client.Replace(ctx, "mydb", "mycollection", id, fetched)
 	if err != nil {	t.Fatalf("Failed to replace %#v", err) }
@@ -74,14 +73,14 @@ func TestReplace_Discrimination(t *testing.T) {
 	ctx1 = context.WithValue(ctx1, "store", "str_1234")
 
 	// Save offer
-  offer1 := map[string]any { "name": "OSRAM 10" }
-  saved, err := client.InsertOne(ctx1, "mydb", "offer", offer1)
-  if err != nil { t.Fatalf("Failed to insertOne %#v", err) }
+	offer1 := map[string]any { "name": "OSRAM 10" }
+	saved, err := client.InsertOne(ctx1, "mydb", "offer", offer1)
+	if err != nil { t.Fatalf("Failed to insertOne %#v", err) }
 
-  id := saved["_id"].(string)
+  	id := saved["_id"].(string)
 
-  // // Now replace it
-  saved["name"] = "** OSRAM 10 CHANGED **"
+  	// Now replace it
+  	saved["name"] = "** OSRAM 10 CHANGED **"
 	replaced, err := client.Replace(ctx1, "mydb", "offer", id, saved)
 	if err != nil { t.Fatalf("Failed to replace %#v", err) }
 
@@ -124,14 +123,14 @@ func TestReplace_Discrimination_NoStore(t *testing.T) {
 	ctx1 = context.WithValue(ctx1, "store", "str_1234")
 	
 	// Save offer
-  offer1 := map[string]any { "name": "OSRAM 11" }
-  saved, err := client.InsertOne(ctx1, "mydb", "offer", offer1)
-  if err != nil { t.Fatalf("Failed to insertOne %#v", err) }
+	offer1 := map[string]any { "name": "OSRAM 11" }
+	saved, err := client.InsertOne(ctx1, "mydb", "offer", offer1)
+	if err != nil { t.Fatalf("Failed to insertOne %#v", err) }
 
-  id := saved["_id"].(string)
+	id := saved["_id"].(string)
 
-  // // Now replace it
-  saved["name"] = "** OSRAM 11 CHANGED **"
+	// Now replace it
+	saved["name"] = "** OSRAM 11 CHANGED **"
 	_, err = client.Replace(context.Background(), "mydb", "offer", id, saved)
 	if err == nil { 
 		t.Fatal("should have required store") 

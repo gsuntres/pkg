@@ -267,3 +267,44 @@ func TestBump(t *testing.T) {
     t.Fatalf("Wrong number %d", v)
   }
 }
+
+func TestEnableDisableAudit(t *testing.T) {
+  p := Orig()
+
+  // subscribe
+  var (
+		onAudit_calls int
+	)
+
+	cancel := p.Subscribe(func(audit *mongo.AuditResult) error {
+		onAudit_calls++
+
+		return nil
+	})
+  defer cancel()
+	
+	// insert item
+	item := bson.M{
+    "name": "Item-98a541e2-73a0-11f1-942b-2748d6589f29",
+  }
+
+  ctx := context.Background()
+	ctx = context.WithValue(ctx, "account", "xxxxxx")
+	ctx = context.WithValue(ctx, "store", "str_4321")
+
+  pp := GetCurrent()
+
+  p.DisableAudit()
+  
+  results, err := Call(pp, "InsertItem", ctx, item)
+  if err != nil { t.Fatalf("call failed: %s", err) }
+
+  if !results[1].IsNil() {
+    err := results[1].Interface().(error)
+    t.Fatalf("insert failed %s", err)
+  }
+	
+	if onAudit_calls != 0 {
+		t.Fatalf("ondelete should have not been called. [%d]", onAudit_calls)
+	}
+}

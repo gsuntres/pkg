@@ -23,8 +23,7 @@ func TestWithiSession(t *testing.T) {
 		if err != nil { return nil, fmt.Errorf("call failed: %w", err) }
 
 		if !results[1].IsNil() {
-	    err := results[1].Interface().(error)
-
+	    	err := results[1].Interface().(error)
 			return nil, fmt.Errorf("insert failed %w", err)
 		}
 
