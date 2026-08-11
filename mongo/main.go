@@ -356,6 +356,7 @@ type MongoStartProps struct {
 	WithAudit bool
 	NoAutoCleanup bool
 	OnAudit *OnAudit
+	IgnoreAudit []string
 	AllowTruncatingDoubles bool
 }
 
@@ -426,6 +427,8 @@ func Start(props *MongoStartProps) error {
 	client.ContextFields = props.ContextFields
 
 	client.WithAudit = props.WithAudit
+
+	client.IgnoreAudit = props.IgnoreAudit
 
 	client.EventBus = events.NewTypedEventBus()
 

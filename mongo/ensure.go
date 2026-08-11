@@ -66,6 +66,6 @@ func ensureUpdatedAt(data bson.M) time.Time {
 	now := time.Now().UTC().Truncate(time.Millisecond)
 
 	data["updatedAt"] = now
-
+	
 	return now
 }

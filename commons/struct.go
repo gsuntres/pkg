@@ -230,7 +230,7 @@ func BsonDFromSlice(in [][]any) bson.D {
 
 	var doc bson.D
 
-  for _, pair := range in {
+  	for _, pair := range in {
       if len(pair) != 2 {
           continue
       }
@@ -244,9 +244,9 @@ func BsonDFromSlice(in [][]any) bson.D {
           Key:   key,
           Value: pair[1], // already `any`
       })
-  }
+  	}
 
-  return doc
+  	return doc
 }
 
 func BsonDGetAny(d bson.D, key string) (any, bool) {
@@ -325,7 +325,6 @@ func BsonAnyToMap(v any) any {
 			m[elem.Key] = BsonAnyToMap(elem.Value)
 		}
 		return m
-
 	case bson.M:
 		m := map[string]any{}
 		for k, v2 := range val {

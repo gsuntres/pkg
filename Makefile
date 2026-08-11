@@ -22,7 +22,8 @@ connect: ## Connect to debug
 
 test: ## Run tests
 	RUN_INTEGRATION=true \
-	go test \
+	go run gotest.tools/gotestsum@latest \
+	-- \
 	-failfast \
 	-race ./... -v
 

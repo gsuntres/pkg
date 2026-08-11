@@ -28,7 +28,7 @@ func BuildGetOne(col map[string]any, report *InitReport) {
 	// create function signature
 	variadic := false
 	funcType := reflect.FuncOf(in, out, variadic)
-  funcName := fmt.Sprintf("%s%s", "Get", commons.StringTitle(singular))
+  	funcName := fmt.Sprintf("%s%s", "Get", commons.StringTitle(singular))
 	fields = append(fields, reflect.StructField{
 		Name: funcName,
 		Type: funcType,

@@ -111,6 +111,7 @@ func Init(props *InitProps) {
 		BuildDeleteOne(col, report)
 		BuildReplaceOne(col, report)
 		BuildUpdateSet(col, report)
+		BuildUpdateAddSet(col, report)
 		BuildCount(col, report)
 
 		client.AddDefinition(col)
