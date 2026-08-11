@@ -426,17 +426,17 @@ func MapFromStringExt(s string) (map[string]any, error) {
 // MapIsSubset given two map[string]any m1 and m2 will determine if m1 is a subset of m2.
 // Only fields' name is evaluated not their values.
 func MapIsSubset(subset, superset any) bool {
-  sub := subset.(map[string]any)
-  sup := superset.(map[string]any)
+	sub := subset.(map[string]any)
+	sup := superset.(map[string]any)
 
 	isSubset := true
 
 	for k, _ := range sub {
 		_, ok := sup[k]
-    if !ok {
-			isSubset = false
-    }
-  }
+		if !ok {
+				isSubset = false
+		}
+	}
 
 	return isSubset
 }
@@ -445,27 +445,26 @@ func MapIsSubset(subset, superset any) bool {
 // Only fields' name is evaluated not their values.
 func MapIsSubsetOfStruct(m map[string]any, s any) bool {
 	v := reflect.ValueOf(s)
-  if v.Kind() == reflect.Ptr {
-    v = v.Elem() // Dereference if it's a pointer
-  }
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem() // Dereference if it's a pointer
+	}
 
-  // Ensure we are working with a struct
-  if v.Kind() != reflect.Struct {
-		return false
-  }
+	// Ensure we are working with a struct
+	if v.Kind() != reflect.Struct {
+			return false
+	}
 
 	isSubset := true
 
-  t := v.Type()
-  for key := range m {
-
-    // FieldByName only finds exported fields
-    if _, found := t.FieldByName(key); !found {
+	t := v.Type()
+	for key := range m {
+		// FieldByName only finds exported fields
+		if _, found := t.FieldByName(key); !found {
 			isSubset = false
 
 			break
-    }
-  }
+		}
+	}
 
 	return isSubset
 }
