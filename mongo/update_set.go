@@ -5,6 +5,7 @@ import (
 	"slices"
 	
 	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"github.com/gsuntres/pkg/commons"
 )
 
