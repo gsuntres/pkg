@@ -290,8 +290,9 @@ func ApplyTimeSeries(cdef *CollectionDefinition, opts *options.CreateCollectionO
 		}
 
 		opts.SetTimeSeriesOptions(tsOpts)
-
-		opts.SetExpireAfterSeconds(cdef.Ttl)
+		if cdef.Ttl > -1 {
+			opts.SetExpireAfterSeconds(cdef.Ttl)
+		}
 	} else {
 		log.Printf("No timeseries")
 	}
@@ -425,6 +426,8 @@ func Start(props *MongoStartProps) error {
 	client.DBPrefix = props.MongoDBPrefix
 
 	client.ContextFields = props.ContextFields
+
+	log.Printf("On event include the following fiels: %v", client.ContextFields)
 
 	client.WithAudit = props.WithAudit
 
