@@ -39,8 +39,9 @@ func (c *MongoClient) UpdateSet(ctx context.Context, database, name string, filt
 		}
 	}
 	
+	opts := options.UpdateOne().SetUpsert(false)
 	update := bson.M{ "$set": data }
-	updateResult, err := collection.UpdateOne(ctx, f, update)
+	updateResult, err := collection.UpdateOne(ctx, f, update, opts)
 	if err != nil {
 		return false, err
 	}
