@@ -20,7 +20,7 @@ func BuildUpdateSet(col map[string]any, report *InitReport) {
 		reflect.TypeOf((*map[string]any)(nil)).Elem(),
 	}
 	out := []reflect.Type{
-		reflect.TypeOf((*bool)(nil)).Elem(),
+		reflect.TypeOf((*map[string]any)(nil)).Elem(),
 		reflect.TypeOf((*error)(nil)).Elem(),
 	}
 
@@ -43,7 +43,7 @@ func BuildUpdateSet(col map[string]any, report *InitReport) {
 	mc := mongo.GetMongoClient()
 
 	// we defer function's implementation until we create the actual struct
-	deferedFuncs[fname] = func(ctx context.Context, filter map[string]any, data map[string]any) (bool, error) {
+	deferedFuncs[fname] = func(ctx context.Context, filter map[string]any, data map[string]any) (map[string]any, error) {
 		db := "__undefined__"
 		if isSystem {
 			db = sysDb

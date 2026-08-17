@@ -44,54 +44,57 @@ func TestUpdateSet_WithAudit(t *testing.T) {
 	ctx := context.Background()
 	ctx = context.WithValue(ctx, "account", "xxxxxx")
 	ctx = context.WithValue(ctx, "store", "str_4321")
-	ok, err := client.UpdateSet(ctx, "mydb", "mycollection", bson.M{"_id": "su_122258"}, toupdate)
+	updated, err := client.UpdateSet(ctx, "mydb", "mycollection", bson.M{"_id": "su_122258"}, toupdate)
 	if err != nil { t.Fatalf("Failed to update %#v", err) }
 	
-	if !ok { t.Fatal("Should have updated") }
-
+	// if !ok { t.Fatal("Should have updated") }
+	if updated["name"] != "** CHANGED USING UPDATE SET **" {
+		t.Fatalf("Failed to update")
+	}
+	
 	cancel()
   
-  if onAudit_calls != 1 {
-  	t.Fatalf("ondelete should have been called once, not %d", onAudit_calls)
-  }
+	if onAudit_calls != 1 {
+		t.Fatalf("ondelete should have been called once, not %d", onAudit_calls)
+	}
 
-  if onAudit_data != nil {
-  	dta := onAudit_data.(bson.M)
-  	AssertSubset(t, dta, toupdate, "Should have been equal")
-  } else {
-  	t.Fatal("should have data")
-  }
+	if onAudit_data != nil {
+		dta := onAudit_data.(bson.M)
+		AssertSubset(t, dta, toupdate, "Should have been equal")
+	} else {
+		t.Fatal("should have data")
+	}
 
-  if onAudit_before != nil {
+	if onAudit_before != nil {
 		bf := onAudit_before.(bson.M)
-  	AssertSubset(t, bf, before, "Should have been equal")
-  } else {
-  	t.Fatal("should have before")
-  }
+		AssertSubset(t, bf, before, "Should have been equal")
+	} else {
+		t.Fatal("should have before")
+	}
 
-  if onAudit_after != nil {
-  	tp := fmt.Sprintf("%T", onAudit_after)
-  	
-  	expectedType := fmt.Sprintf("%T", bson.M{})
-  	if tp != expectedType {
-  		t.Fatalf("after has the wrong type %s", tp)
-  	}
+	if onAudit_after != nil {
+		tp := fmt.Sprintf("%T", onAudit_after)
+		
+		expectedType := fmt.Sprintf("%T", bson.M{})
+		if tp != expectedType {
+			t.Fatalf("after has the wrong type %s", tp)
+		}
 
-  	after := onAudit_after.(bson.M)
+		after := onAudit_after.(bson.M)
 
-  	before["name"] = "** CHANGED USING UPDATE SET **"
-  	delete(before, "updatedAt")
-  	delete(after, "updatedAt")
+		before["name"] = "** CHANGED USING UPDATE SET **"
+		delete(before, "updatedAt")
+		delete(after, "updatedAt")
 
-  	AssertSubset(t, after, before, "Should have been equal")
-  } else {
-  	t.Fatal("should have after")
-  }
+		AssertSubset(t, after, before, "Should have been equal")
+	} else {
+		t.Fatal("should have after")
+	}
 
-  if onAudit_context != nil {
-  	ctx := onAudit_context.(map[string]any)
-  	AssertSubset(t, ctx, map[string]any{"account": "xxxxxx", "store": "str_4321"}, "Should have been equal")
-  } else {
-  	t.Fatal("should have context")
-  }
+	if onAudit_context != nil {
+		ctx := onAudit_context.(map[string]any)
+		AssertSubset(t, ctx, map[string]any{"account": "xxxxxx", "store": "str_4321"}, "Should have been equal")
+	} else {
+		t.Fatal("should have context")
+	}
 }
