@@ -33,7 +33,7 @@ func (c *MongoClient) UpdateAddToSet(ctx context.Context, database, name string,
 
 	data := commons.MapPick(found, "updatedAt")
 	
-	prepareForUpdateAddToSet(data)
+	prepareForUpdateAddToSet(data, c.Snake)
 	
 	update := bson.M{ 
 		"$addToSet": bson.M{
@@ -74,6 +74,6 @@ func (c *MongoClient) UpdateAddToSet(ctx context.Context, database, name string,
 	return changed, nil
 }
 
-func prepareForUpdateAddToSet(data bson.M) {
-	ensureUpdatedAt(data)
+func prepareForUpdateAddToSet(data bson.M, snake bool) {
+	ensureUpdatedAt(data, snake)
 }

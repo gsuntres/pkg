@@ -39,7 +39,12 @@ func ensureNoId(data bson.M) {
 
 func ensureExistingCreatedAt(data bson.M, old bson.M) time.Time {
 	var created time.Time
+
 	createdAny, ok := old["createdAt"]
+	if !ok {
+		createdAny, ok = old["created_at"]
+	}
+
 	if ok {
 		switch val := createdAny.(type) {
 		case bson.DateTime:
@@ -54,18 +59,26 @@ func ensureExistingCreatedAt(data bson.M, old bson.M) time.Time {
 	return created
 }
 
-func ensureCreatedAt(data bson.M) time.Time {
+func ensureCreatedAt(data bson.M, snake bool) time.Time {
 	now := time.Now().UTC().Truncate(time.Millisecond)
 
-	data["createdAt"] = now
+	if snake {
+		data["created_at"] = now
+	} else {
+		data["createdAt"] = now	
+	}
 
 	return now
 }
 
-func ensureUpdatedAt(data bson.M) time.Time {
+func ensureUpdatedAt(data bson.M, snake bool) time.Time {
 	now := time.Now().UTC().Truncate(time.Millisecond)
 
-	data["updatedAt"] = now
+	if snake {
+		data["updated_at"] = now
+	} else {
+		data["updatedAt"] = now
+	}
 	
 	return now
 }

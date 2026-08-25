@@ -17,7 +17,7 @@ func (c *MongoClient) UpdateSet(ctx context.Context, database, name string, filt
 	
 	data := commons.BsonClone(original)
 	
-	prepareForUpdateSet(data)
+	prepareForUpdateSet(data, c.Snake)
 
 	result, err := c.DiscriminatorCheckAndApplyToFilter(ctx, name, filter)
 	if err != nil {
@@ -74,6 +74,6 @@ func (c *MongoClient) UpdateSet(ctx context.Context, database, name string, filt
 	return after, nil
 }
 
-func prepareForUpdateSet(data bson.M) {
-	ensureUpdatedAt(data)
+func prepareForUpdateSet(data bson.M, snake bool) {
+	ensureUpdatedAt(data, snake)
 }

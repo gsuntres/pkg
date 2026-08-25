@@ -52,7 +52,7 @@ func TestEnsureCreatedAt(t *testing.T) {
 	}
 
 	synctest.Test(t, func(t *testing.T) {
-		now := ensureCreatedAt(data)
+		now := ensureCreatedAt(data, false)
 
 		if createdAt, _ := data["createdAt"]; createdAt != now {
 			t.Fatal("Failed to add CreatedAt")

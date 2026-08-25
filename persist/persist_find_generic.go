@@ -10,6 +10,8 @@ import (
 	"github.com/gsuntres/pkg/mongo"
 )
 
+// BuildFindGeneric will generate a generic Find with database and collection specified
+// by the user.
 func BuildFindGeneric() {
 	// prepare input arguments and return results
 	in := []reflect.Type{

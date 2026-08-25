@@ -23,7 +23,7 @@ func (c *MongoClient) Replace(ctx context.Context, database, name string, id str
 		return nil, err
 	}
 
-	prepareForReplace(data, found)
+	prepareForReplace(data, found, c.Snake)
 
 	if err := c.DiscriminatorCheckAndApplyToData(ctx, name, data); err != nil {
 		return  nil, err
@@ -61,8 +61,8 @@ func PostReplace(updateResult *mongo.UpdateResult, data bson.M, id string) {
 	}
 }
 
-func prepareForReplace(data bson.M, old bson.M) {
+func prepareForReplace(data bson.M, old bson.M, snake bool) {
 	ensureNoId(data)
-	ensureUpdatedAt(data)
+	ensureUpdatedAt(data, snake)
 	ensureExistingCreatedAt(data, old)
 }

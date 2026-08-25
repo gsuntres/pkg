@@ -278,6 +278,12 @@ const SAVE_USER_DATA = `
 }
 `
 
+func GetName(v string) string {
+	client := mongo.GetMongoClient()
+
+	return client.GetName(v)
+}
+
 // SaveUser will encrypt the password before saving the user.
 func (p *Persist) SaveUser(ctx context.Context, data *User) (*User, error) {
 	if valid := commons.Validate(SAVE_USER_DATA, data); valid != nil {

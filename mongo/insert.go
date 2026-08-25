@@ -26,7 +26,7 @@ func (c *MongoClient) InsertOne(ctx context.Context, database, name string, orig
 
 	data := commons.BsonClone(original)
 
-	prepareForInsert(data, c.GetIdPrefix(name))
+	prepareForInsert(data, c.GetIdPrefix(name), c.Snake)
 
 	if err := c.DiscriminatorCheckAndApplyToData(ctx, name, data); err != nil {
 		return nil, err
@@ -61,8 +61,8 @@ func (c *MongoClient) InsertOne(ctx context.Context, database, name string, orig
 // prepareForInsert takes a map[string]any and:
 //	* adds a new _id if property does not exist or is an empty string
 //	* adds/updates property created_at using the current timestamp.
-func prepareForInsert(data bson.M, idPrefix string) {
+func prepareForInsert(data bson.M, idPrefix string, snake bool) {
 	ensureId(data, idPrefix)
-	ensureCreatedAt(data)
-	ensureUpdatedAt(data)
+	ensureCreatedAt(data, snake)
+	ensureUpdatedAt(data, snake)
 }

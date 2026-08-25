@@ -57,4 +57,21 @@ func BuildFind(col map[string]any, report *InitReport) {
 		}
 
 		return mc.Find(ctx, db, name, filter, opts)
-	}}
+	}
+}
+
+type FindResults struct {
+	Data				[]map[string]any `json:"data"`
+	Count 			int `json:"count"`
+	HasMore 		bool `json:"has_more"`
+	HasPrevious bool `json:"has_previous"`
+	Offset 			int64 `json:"offset"`
+	Limit 			int64 `json:"limit"`
+}
+
+func GetFindResults(m bson.M) *FindResults {
+	o := &FindResults{}
+	commons.BsonToStruct(m, o)
+
+	return o
+}

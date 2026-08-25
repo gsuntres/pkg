@@ -106,6 +106,8 @@ type MongoClient struct {
 	EventBus *events.TypedEventBus
 	// IgnoreAudit a list of entities to ignore
 	IgnoreAudit []string
+	// Snake case
+	Snake bool
 
 	flashDb string
 }
@@ -359,6 +361,7 @@ type MongoStartProps struct {
 	OnAudit *OnAudit
 	IgnoreAudit []string
 	AllowTruncatingDoubles bool
+	MongoSnake bool
 }
 
 func Start(props *MongoStartProps) error {
@@ -421,6 +424,8 @@ func Start(props *MongoStartProps) error {
 
 		cOptions = cOptions.SetMonitor(monitor)
 	}
+
+	client.Snake = props.MongoSnake
 
 	// set DBPrefix
 	client.DBPrefix = props.MongoDBPrefix

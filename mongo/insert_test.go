@@ -102,7 +102,7 @@ func TestPrepareForInsert_WithoutId(t *testing.T) {
 		"name": "My Name Is",
 	}
 
-	prepareForInsert(data, "")
+	prepareForInsert(data, "", false)
 
 	if id, okid := data["_id"]; !okid || id == "" {
 		t.Fatal("Failed to add Id")
@@ -115,7 +115,7 @@ func TestPrepareForInsert_ExistingId(t *testing.T) {
 		"name": "My Name Is",
 	}
 
-	prepareForInsert(data, "")
+	prepareForInsert(data, "", false)
 
 	if data["_id"] == "" {
 		t.Fatal("id was updated")
