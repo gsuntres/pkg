@@ -723,3 +723,45 @@ func unsetRecursive(node any, parts []string) {
     }
   }
 }
+
+func StructListFields(value any) {
+	if value == nil {
+		return
+	}
+
+	v := reflect.ValueOf(value)
+
+	// Dereference pointers and interfaces.
+	for v.Kind() == reflect.Pointer || v.Kind() == reflect.Interface {
+		if v.IsNil() {
+			return
+		}
+		v = v.Elem()
+	}
+
+	if v.Kind() != reflect.Struct {
+		log.Printf("expected struct, got %s", v.Kind())
+		return
+	}
+
+	t := v.Type()
+
+	for i := 0; i < v.NumField(); i++ {
+		field := t.Field(i)
+		fieldValue := v.Field(i)
+
+		log.Printf("%s: ", field.Name)
+
+		if fieldValue.CanInterface() {
+			log.Printf("%v", fieldValue.Interface())
+		} else {
+			log.Println("<unexported>")
+		}
+	}
+}
+
+func MapListKeys(o map[string]any) {
+	for k, _ := range o {
+		log.Printf("• %s", k)
+	}
+}

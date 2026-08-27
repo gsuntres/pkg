@@ -13,7 +13,7 @@ import (
 
 func BuildFind(col map[string]any, report *InitReport) {
 	name := col["_name"].(string)
-  plural := col["plural"].(string)
+  	plural := col["plural"].(string)
 
 	// prepare input arguments and return results
 	in := []reflect.Type{
@@ -29,7 +29,7 @@ func BuildFind(col map[string]any, report *InitReport) {
 	// create function signature
 	variadic := false
 	funcType := reflect.FuncOf(in, out, variadic)
-  funcName := fmt.Sprintf("%s%s", "Find", commons.StringTitle(plural))
+	funcName := fmt.Sprintf("%s%s", "Find", commons.StringTitle(plural))
 	fields = append(fields, reflect.StructField{
 		Name: funcName,
 		Type: funcType,
@@ -50,9 +50,12 @@ func BuildFind(col map[string]any, report *InitReport) {
 		if isSystem {
 			db = sysDb
 		} else {
-			account := ctx.Value("account").(string)
-			if account != "" {
-				db = mc.GetName(account)
+			accountAny := ctx.Value("account")
+			if accountAny != nil {
+				account := accountAny.(string)
+				if account != "" {
+					db = mc.GetName(account)
+				}
 			}
 		}
 
@@ -61,16 +64,17 @@ func BuildFind(col map[string]any, report *InitReport) {
 }
 
 type FindResults struct {
-	Data				[]map[string]any `json:"data"`
-	Count 			int `json:"count"`
-	HasMore 		bool `json:"has_more"`
+	Data		[]map[string]any `json:"data"`
+	Total 		int `json:"total"`
+	HasMore 	bool `json:"has_more"`
 	HasPrevious bool `json:"has_previous"`
-	Offset 			int64 `json:"offset"`
-	Limit 			int64 `json:"limit"`
+	Offset 		int64 `json:"offset"`
+	Limit 		int64 `json:"limit"`
 }
 
 func GetFindResults(m bson.M) *FindResults {
 	o := &FindResults{}
+
 	commons.BsonToStruct(m, o)
 
 	return o

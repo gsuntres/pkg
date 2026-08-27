@@ -139,7 +139,12 @@ func (c *MongoClient) Find(ctx context.Context, database, name string, filter bs
 		var nextCursor string
 		lastId := last["_id"]
 
-		nextCursor = EncodeCursor(lastId.(bson.ObjectID))
+		switch lid := lastId.(type) {
+		case bson.ObjectID:
+			nextCursor = EncodeCursor(lid)
+		case string:
+			nextCursor = lid
+		}
 
 		out["next_cursor"] = nextCursor
 	}

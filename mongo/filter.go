@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"log"
+	"time"
 
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
@@ -30,8 +31,14 @@ func makeFilter(name string, value any) *Filter {
 	case bson.M:
 		for kk, vv := range val {
 			op = kk
-			v = vv.(string)
 
+			switch vvt := vv.(type) {
+			case string:
+				v = vvt
+			case time.Time:
+				v = vvt.UTC().Format(time.RFC3339)
+			}
+			
 			break
 		}
 		
