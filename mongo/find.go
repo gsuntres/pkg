@@ -63,7 +63,7 @@ func (c *MongoClient) Find(ctx context.Context, database, name string, filter bs
 	sortOpts := commons.BsonDFromSlice(opts.Sort)
 	var sort bson.D
 
-	if len(sortOpts) == 0 {
+	if len(sortOpts) != 0 {
 		sort = sortOpts
 	} else {
 		sort = bson.D{{Key: "_id", Value: 1}}
