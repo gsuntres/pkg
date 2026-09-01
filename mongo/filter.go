@@ -125,8 +125,14 @@ func mapToOp(v string) string {
 	switch v {
 	case "eq":
 		return "$eq"
-	case "le":
-		return "$le"
+	case "lt":
+		return "$lt"
+	case "lte":
+		return "$lte"
+	case "gt":
+		return "$gt"
+	case "gte":
+		return "$gte"
 	case "includes": 
 		return "$regex"
 	default:
