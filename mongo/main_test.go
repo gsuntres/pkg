@@ -5,17 +5,19 @@ import (
 	"time"
 	"reflect"
 	"testing"
-  "context"
-  "fmt"
+	"context"
+	"fmt"
+	"log"
+	"net/url"
 	"encoding/json"
 
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"go.mongodb.org/mongo-driver/v2/bson"
 
-  "github.com/testcontainers/testcontainers-go"
-  "github.com/testcontainers/testcontainers-go/modules/mongodb"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/modules/mongodb"
 
-  "github.com/gsuntres/pkg/commons"
+	"github.com/gsuntres/pkg/commons"
 )
 
 type Sample struct {
@@ -26,54 +28,67 @@ type Sample struct {
 }
 
 func TestMain(m *testing.M) {
-  if os.Getenv("RUN_INTEGRATION") == "" {
-    fmt.Println("Skipping package tests: RUN_INTEGRATION is missing")
-    os.Exit(0) // Exit with success, but no tests ran
-  }
+	if os.Getenv("RUN_INTEGRATION") == "" {
+		fmt.Println("Skipping package tests: RUN_INTEGRATION is missing")
+		os.Exit(0) // Exit with success, but no tests ran
+	}
 
-  ctx := context.Background()
+  	ctx := context.Background()
 
-  user := "admin"
-  pass := "1"
+  	user := "admin"
+  	pass := "1"
 
-  // 1. Setup: Start the MongoDB container
-  mongoContainer, err := mongodb.Run(ctx, 
-  	"mongo:8",
-  	mongodb.WithReplicaSet("rs0"),
-    testcontainers.WithEnv(map[string]string{
-      "MONGO_INITDB_ROOT_USERNAME": user,
-      "MONGO_INITDB_ROOT_PASSWORD": pass,      
-    }),
-  )
-  if err != nil {
-    panic("failed to start container")
-  }
+	// 1. Setup: Start the MongoDB container
+	mongoContainer, err := mongodb.Run(ctx, 
+		"mongo:8",
+		mongodb.WithReplicaSet("rs0"),
+		testcontainers.WithEnv(map[string]string{
+		"MONGO_INITDB_ROOT_USERNAME": user,
+		"MONGO_INITDB_ROOT_PASSWORD": pass,      
+		}),
+	)
+	if err != nil {
+		log.Fatalf("failed to start container: %v", err)
+	}
 
-  // 2. Get the connection string dynamically
-  endpoint, _ := mongoContainer.ConnectionString(ctx)
+	// 2. Get the connection string dynamically
+	connStr, err := mongoContainer.ConnectionString(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	endpoint, err := url.Parse(connStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	query := endpoint.Query()
+	query.Set("directConnection", "true")
+	query.Set("replicaSet", "rs0")
+	endpoint.RawQuery = query.Encode()
 
 	mongoDebug := os.Getenv("DEBUG") != ""
 
-  Start(&MongoStartProps{
-    MongoUri: endpoint,
-    MongoUser: user,
-    MongoPass: pass,
-    ContextFields: []string{"account", "store"},
-    MongoDebugQuery: mongoDebug,
-    WithAudit: true,
-  })
+	Start(&MongoStartProps{
+		MongoUri: endpoint.String(),
+		MongoUser: user,
+		MongoPass: pass,
+		ContextFields: []string{"account", "store"},
+		MongoDebugQuery: mongoDebug,
+		WithAudit: true,
+	})
 
-  // 3. Run tests
-  LoadTestSample()
+	// 3. Run tests
+	LoadTestSample()
 
-  code := m.Run()
+	code := m.Run()
 
-  // 4. Teardown: Clean up resources
-  Stop()
+	// 4. Teardown: Clean up resources
+	Stop()
 
-  _ = testcontainers.TerminateContainer(mongoContainer)
+	_ = testcontainers.TerminateContainer(mongoContainer)
 
-  os.Exit(code)
+	os.Exit(code)
 }
 
 func TestApplySchema(t *testing.T) {

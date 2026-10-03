@@ -1,10 +1,12 @@
 package persist
 
 import (
+  "log"
 	"os"
 	"testing"
   "context"
   "fmt"
+  "net/url"
 
   "github.com/testcontainers/testcontainers-go"
   "github.com/testcontainers/testcontainers-go/modules/mongodb"
@@ -35,14 +37,28 @@ func TestMain(m *testing.M) {
       "MONGO_INITDB_ROOT_PASSWORD": pass,
     }),)
   if err != nil {
-    panic("failed to start container")
+    log.Fatalf("failed to start container: %v", err)
   }
 
-  // 2. Get the connection string dynamically
-  endpoint, _ := mongoContainer.ConnectionString(ctx)
+  
+	// 2. Get the connection string dynamically
+	connStr, err := mongoContainer.ConnectionString(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	endpoint, err := url.Parse(connStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+  query := endpoint.Query()
+	query.Set("directConnection", "true")
+	query.Set("replicaSet", "rs0")
+	endpoint.RawQuery = query.Encode()
 
   mongo.Start(&mongo.MongoStartProps{
-    MongoUri: endpoint,
+    MongoUri: endpoint.String(),
     MongoUser: user,
     MongoPass: pass,
   })

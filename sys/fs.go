@@ -4,6 +4,8 @@ import (
   "log"
   "io"
   "os"
+  "errors"
+  "runtime"
   "path/filepath"
 )
 
@@ -27,27 +29,37 @@ func Rootify(path string, rootPath... string) string {
   return filepath.Join(root, path)
 }
 
-func GetProjectRoot(dir... bool) (string, error) {
-  exeDir, err := os.Executable()
-  if err != nil {
-    return "", err
+func GetProjectRoot() (string, error) {
+  _, filename, _, ok := runtime.Caller(0)
+  if !ok {
+    return "", errors.New("could not determine source file")
   }
 
-  exeDir = filepath.Dir(exeDir)
-
-  for i, dir := range dir {
-    if dir {
-      exeDir = filepath.Dir(exeDir)
-    }
-
-    // up to 3 
-    if i > 3 {
-      break
-    }
-  }
-
-  return exeDir, nil
+  return filepath.Dir(filename), nil
 }
+
+
+// func GetProjectRoot(dir... bool) (string, error) {
+//   exeDir, err := os.Executable()
+//   if err != nil {
+//     return "", err
+//   }
+
+//   exeDir = filepath.Dir(exeDir)
+
+//   for i, dir := range dir {
+//     if dir {
+//       exeDir = filepath.Dir(exeDir)
+//     }
+
+//     // up to 3 
+//     if i > 3 {
+//       break
+//     }
+//   }
+
+//   return exeDir, nil
+// }
 
 func CopyFile(src, dst string) error {
   in, err := os.Open(src)
