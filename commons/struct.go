@@ -132,7 +132,9 @@ func StructSetValue(o any, field string, value any) {
 }
 
 func StructToStruct(source any, target any) {
-	mapstructure.Decode(source, &target)
+	if err := mapstructure.Decode(source, target); err != nil {
+		log.Fatalf("failed to copy to struct: %#v", err)
+	}
 }
 
 // StructToMapRecursive given a struct or a primitive will return the equivalent

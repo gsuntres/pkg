@@ -20,7 +20,7 @@ func Rootify(path string, rootPath... string) string {
   var err error
 
   if !withRoot {
-    root, err = GetProjectRoot()
+    root, err = GetProjectRoot(1)
     if err != nil {
       log.Fatal(err)
     }  
@@ -29,8 +29,8 @@ func Rootify(path string, rootPath... string) string {
   return filepath.Join(root, path)
 }
 
-func GetProjectRoot() (string, error) {
-  _, filename, _, ok := runtime.Caller(0)
+func GetProjectRoot(caller int) (string, error) {
+  _, filename, _, ok := runtime.Caller(caller)
   if !ok {
     return "", errors.New("could not determine source file")
   }
@@ -38,6 +38,14 @@ func GetProjectRoot() (string, error) {
   return filepath.Dir(filename), nil
 }
 
+func GetDir(caller int) (string, error) {
+  _, filename, _, ok := runtime.Caller(caller)
+  if !ok {
+    return "", errors.New("could not determine source file")
+  }
+
+  return filepath.Dir(filename), nil
+}
 
 // func GetProjectRoot(dir... bool) (string, error) {
 //   exeDir, err := os.Executable()
