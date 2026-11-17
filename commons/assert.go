@@ -1,10 +1,11 @@
 package commons
 
 import (
-	"testing"
 	"bytes"
+	"encoding/json"
 	"reflect"
-	
+	"testing"
+
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
@@ -16,7 +17,7 @@ func AssertDeepEqualStrict(t *testing.T, expected, actual any) {
 	actJSON, _ := bson.MarshalExtJSON(actual, true, true)
 
 	if !bytes.Equal(expJSON, actJSON) {
-	    t.Fatalf("expected %s, got %s", expJSON, actJSON)
+		t.Fatalf("expected %s, got %s", expJSON, actJSON)
 	}
 }
 
