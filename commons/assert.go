@@ -1,7 +1,6 @@
 package commons
 
 import (
-	"bytes"
 	"encoding/json"
 	"reflect"
 	"testing"
@@ -11,7 +10,7 @@ import (
 )
 
 // AssertDeepEqual compares equality by comparing bytes.
-func AssertDeepEqualStrict(t *testing.T, expected, actual any) {
+func AssertDeepEqualStrict(t *testing.T, expected, actual any, ignore ...string) {
 	t.Helper()
 
 	expJSON, err := bson.MarshalExtJSON(expected, true, false)
@@ -24,7 +23,15 @@ func AssertDeepEqualStrict(t *testing.T, expected, actual any) {
 		t.Fatalf("marshal actual: %v", err)
 	}
 
-	if diff := cmp.Diff(prettyJSON(t, expJSON), prettyJSON(t, actJSON)); diff != "" {
+	ignored := make(map[string]bool, len(ignore))
+	for _, key := range ignore {
+		ignored[key] = true
+	}
+
+	if diff := cmp.Diff(
+		prettyJSON(t, expJSON, ignore...),
+		prettyJSON(t, actJSON, ignore...),
+	); diff != "" {
 		t.Errorf("mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -55,12 +62,40 @@ func AssertDeepEqual(t *testing.T, expected, actual any) {
 	}
 }
 
-func prettyJSON(t *testing.T, data []byte) string {
+func prettyJSON(t *testing.T, data []byte, ignore ...string) string {
 	t.Helper()
 
-	var out bytes.Buffer
-	if err := json.Indent(&out, data, "", "  "); err != nil {
-		t.Fatalf("indent JSON: %v", err)
+	var v any
+	if err := json.Unmarshal(data, &v); err != nil {
+		t.Fatalf("unmarshal JSON: %v", err)
 	}
-	return out.String()
+
+	ignored := make(map[string]bool, len(ignore))
+	for _, key := range ignore {
+		ignored[key] = true
+	}
+	removeFields(v, ignored)
+
+	out, err := json.MarshalIndent(v, "", "  ")
+	if err != nil {
+		t.Fatalf("pretty-print JSON: %v", err)
+	}
+	return string(out)
+}
+
+func removeFields(v any, ignored map[string]bool) {
+	switch x := v.(type) {
+	case map[string]any:
+		for key, value := range x {
+			if ignored[key] {
+				delete(x, key)
+			} else {
+				removeFields(value, ignored)
+			}
+		}
+	case []any:
+		for _, value := range x {
+			removeFields(value, ignored)
+		}
+	}
 }
